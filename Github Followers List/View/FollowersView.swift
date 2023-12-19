@@ -22,9 +22,6 @@ struct FollowersView: View {
                 searchSection
                 followersList
             }
-            .alert(isPresented: $followersViewModel.showAlert) {
-                createAlert()
-            }
             .navigationTitle("Github Followers List")
         }
     }
@@ -43,9 +40,7 @@ struct FollowersView: View {
     
     private var searchButton: some View {
         Button(action: {
-            Task {
-                await followersViewModel.getDataAsync(forUsername: textFieldText)
-            }
+            followersViewModel.search(forUsername: textFieldText)
         }) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.white)
@@ -79,6 +74,8 @@ struct FollowersView: View {
                             .frame(width: 50, height: 50)
                             .foregroundColor(.red)
                             .cornerRadius(25)
+                    @unknown default:
+                        fatalError()
                     }
                 }
                 .padding(.trailing, 10)
@@ -88,15 +85,6 @@ struct FollowersView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-    }
-    
-    private func createAlert() -> Alert {
-        return Alert(
-            title: Text("Error"),
-            message: Text(followersViewModel.alertMessage ?? "Unknown error"),
-            dismissButton: .default(Text("OK")) {
-            }
-        )
     }
 }
 
