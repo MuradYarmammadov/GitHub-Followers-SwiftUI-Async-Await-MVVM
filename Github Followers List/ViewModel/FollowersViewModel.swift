@@ -11,9 +11,9 @@ class FollowersViewModel: ObservableObject {
     
     @Published var followersList = [FollowersModel]()
     
-    func getDataAsync(forUsername username:String) async {
+    func getDataContinuation(forUsername username:String) async {
         do {
-            let followers = try await APICaller.getFollowersAsync(username: username)
+            let followers = try await APICaller.getFollowersContinuation(username: username)
             DispatchQueue.main.async {
                 self.followersList = followers
             }
@@ -25,9 +25,23 @@ class FollowersViewModel: ObservableObject {
     
     func search(forUsername username: String) {
         Task {
-            await getDataAsync(forUsername: username)
+            await getDataContinuation(forUsername: username)
         }
     }
+    
+    
+//    func getDataAsync(forUsername username:String) async {
+//        do {
+//            let followers = try await APICaller.getFollowersAsync(username: username)
+//            DispatchQueue.main.async {
+//                self.followersList = followers
+//            }
+//        }
+//        catch {
+//            print(error)
+//        }
+//    }
+    
     
     //    func getData(forUsername username: String) {
     //        APICaller.getFollowers(username: username) { [weak self] result in
